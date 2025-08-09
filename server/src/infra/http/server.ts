@@ -8,6 +8,7 @@ import {
   serializerCompiler,
   validatorCompiler,
 } from 'fastify-type-provider-zod'
+import { createShortenedLinkRoute } from './routes/create-shortened-link'
 
 const server = fastify()
 
@@ -25,6 +26,8 @@ server.register(fastifySwagger, {
   },
   transform: jsonSchemaTransform,
 })
+
+server.register(createShortenedLinkRoute)
 
 server.register(fastifyApiReference, {
   routePrefix: '/docs',

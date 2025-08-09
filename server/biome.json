@@ -8,11 +8,11 @@
   },
   "javascript": {
     "formatter": {
-        "enabled": true,
-        "quoteStyle": "single",
-        "lineWidth": 90,
-        "semicolons": "asNeeded",
-        "trailingCommas": "es5"
+      "enabled": true,
+      "quoteStyle": "single",
+      "lineWidth": 90,
+      "semicolons": "asNeeded",
+      "trailingCommas": "es5"
     }
   }
 }
