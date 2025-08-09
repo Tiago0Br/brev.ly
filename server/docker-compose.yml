@@ -1,0 +1,17 @@
+services:
+  db:
+    image: bitnami/postgresql
+    container_name: brevly-db
+    restart: unless-stopped
+    ports:
+      - "${DB_PORT}:5432"
+    environment:
+      - POSTGRESQL_USERNAME=${DB_USER}
+      - POSTGRESQL_PASSWORD=${DB_PASSWORD}
+      - POSTGRESQL_DATABASE=${DB_NAME}
+    volumes:
+      - db_data:/bitnami/postgresql
+
+volumes:
+  db_data:
+    driver: local
