@@ -1,5 +1,4 @@
-import { db } from '@/infra/database'
-import { schema } from '@/infra/database/schemas'
+import { createLink } from '@/app/services/create-link'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
@@ -13,8 +12,17 @@ export const createShortenedLinkRoute: FastifyPluginAsyncZod = async (server) =>
         body: z.object({
           originalUrl: z.url({ error: 'Invalid URL format' }),
           shortenedUrl: z
-            .string({ error: 'Shortened URL must be a string' })
-            .startsWith('brev.ly/', { error: 'The URL must start with "brev.ly/"' }),
+            .string()
+            .refine((url) => url.startsWith('brev.ly/') && url.length > 8, {
+              message: 'URL must start with "brev.ly/" and have a valid path',
+            })
+            .refine(
+              (url) => /^[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=%/]+$/.test(url.slice(8)),
+              {
+                message: 'URL path contains invalid characters',
+              }
+            )
+            .toLowerCase(),
         }),
         response: {
           201: z.object({
@@ -29,10 +37,7 @@ export const createShortenedLinkRoute: FastifyPluginAsyncZod = async (server) =>
     async (request, reply) => {
       const { originalUrl, shortenedUrl } = request.body
 
-      await db.insert(schema.links).values({
-        originalUrl: originalUrl,
-        shortenedUrl: shortenedUrl,
-      })
+      await createLink({ originalUrl, shortenedUrl })
 
       return reply.status(201).send({ message: 'Link created successfully' })
     }

@@ -10,8 +10,8 @@ services:
       - POSTGRESQL_PASSWORD=${DB_PASSWORD}
       - POSTGRESQL_DATABASE=${DB_NAME}
     volumes:
-      - db_data:/bitnami/postgresql
+      - brev_ly_data:/bitnami/postgresql
 
 volumes:
-  db_data:
+  brev_ly_data:
     driver: local
