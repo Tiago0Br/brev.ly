@@ -13,7 +13,7 @@ export async function createLink({ originalUrl, shortenedUrl }: CreateLinkProps)
     .from(schema.links)
     .where(eq(schema.links.shortenedUrl, shortenedUrl))
 
-  if (shortenedUrlAlreadyExists) {
+  if (shortenedUrlAlreadyExists.length !== 0) {
     throw new Error('This shortened URL already exists')
   }
 

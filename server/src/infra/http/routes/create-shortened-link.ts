@@ -21,8 +21,7 @@ export const createShortenedLinkRoute: FastifyPluginAsyncZod = async (server) =>
               {
                 message: 'URL path contains invalid characters',
               }
-            )
-            .toLowerCase(),
+            ),
         }),
         response: {
           201: z.object({
