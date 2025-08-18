@@ -11,6 +11,7 @@ import {
 import { createShortenedLinkRoute } from './routes/create-shortened-link'
 import { deleteShortenedLinkRoute } from './routes/delete-shortened-link'
 import { getAllLinksRoute } from './routes/get-all-links'
+import { getOriginalUrlByShortenedUrlRoute } from './routes/get-original-url-by-shortened-url'
 
 const server = fastify()
 
@@ -32,6 +33,7 @@ server.register(fastifySwagger, {
 server.register(createShortenedLinkRoute)
 server.register(deleteShortenedLinkRoute)
 server.register(getAllLinksRoute)
+server.register(getOriginalUrlByShortenedUrlRoute)
 
 server.register(fastifyApiReference, {
   routePrefix: '/docs',
