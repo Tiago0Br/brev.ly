@@ -12,10 +12,7 @@ export const createShortenedLinkRoute: FastifyPluginAsyncZod = async (server) =>
         body: z.object({
           originalUrl: z.url({ error: 'Invalid URL format' }),
           shortenedUrl: z
-            .string()
-            .refine((url) => url.startsWith('brev.ly/') && url.length > 8, {
-              message: 'URL must start with "brev.ly/" and have a valid path',
-            })
+            .string({ error: 'Shortened URL must be a string' })
             .refine(
               (url) => /^[a-zA-Z0-9\-._~:/?#[\]@!$&'()*+,;=%/]+$/.test(url.slice(8)),
               {

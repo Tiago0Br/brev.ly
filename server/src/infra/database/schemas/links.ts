@@ -1,4 +1,4 @@
-import { pgTable, text, timestamp } from 'drizzle-orm/pg-core'
+import { integer, pgTable, text, timestamp } from 'drizzle-orm/pg-core'
 import { uuidv7 } from 'uuidv7'
 
 export const links = pgTable('links', {
@@ -6,4 +6,5 @@ export const links = pgTable('links', {
   originalUrl: text('original_url').notNull(),
   shortenedUrl: text('shortened_url').notNull().unique(),
   createdAt: timestamp('created_at').defaultNow(),
+  accessCount: integer('access_count').default(0),
 })
