@@ -12,7 +12,8 @@ export const getOriginalUrlByShortenedUrlRoute: FastifyPluginAsyncZod = async (
     '/:shortenedUrl',
     {
       schema: {
-        summary: 'Get original URL by shortened URL',
+        summary:
+          'Get the original URL by shortened URL and increments the counter of accesses',
         tags: ['links'],
         params: z.object({
           shortenedUrl: z
@@ -41,16 +42,22 @@ export const getOriginalUrlByShortenedUrlRoute: FastifyPluginAsyncZod = async (
       const [link] = await db
         .select({
           originalUrl: schema.links.originalUrl,
+          accessCount: schema.links.accessCount,
         })
         .from(schema.links)
         .where(eq(schema.links.shortenedUrl, shortenedUrl))
         .limit(1)
 
-      if (link) {
-        return reply.status(200).send({ originalUrl: link.originalUrl })
+      if (!link) {
+        return reply.status(404).send({ message: 'URL not found' })
       }
 
-      return reply.status(404).send({ message: 'URL not found' })
+      await db
+        .update(schema.links)
+        .set({ accessCount: (link.accessCount ?? 0) + 1 })
+        .where(eq(schema.links.shortenedUrl, shortenedUrl))
+
+      return reply.status(200).send({ originalUrl: link.originalUrl })
     }
   )
 }
