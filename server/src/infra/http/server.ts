@@ -10,6 +10,7 @@ import {
 } from 'fastify-type-provider-zod'
 import { createShortenedLinkRoute } from './routes/create-shortened-link'
 import { deleteShortenedLinkRoute } from './routes/delete-shortened-link'
+import { exportLinksRoute } from './routes/export-links'
 import { getAllLinksRoute } from './routes/get-all-links'
 import { getOriginalUrlByShortenedUrlRoute } from './routes/get-original-url-by-shortened-url'
 
@@ -34,6 +35,7 @@ server.register(createShortenedLinkRoute)
 server.register(deleteShortenedLinkRoute)
 server.register(getAllLinksRoute)
 server.register(getOriginalUrlByShortenedUrlRoute)
+server.register(exportLinksRoute)
 
 server.register(fastifyApiReference, {
   routePrefix: '/docs',
