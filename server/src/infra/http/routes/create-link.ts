@@ -3,13 +3,13 @@ import { validateUrlPath } from '@/utils/validate-url-path'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
-export const createShortenedLinkRoute: FastifyPluginAsyncZod = async (server) => {
+export const createLinkRoute: FastifyPluginAsyncZod = async (server) => {
   server.post(
-    '/links/create',
+    '/links',
     {
       schema: {
-        summary: 'Create a shortened link',
-        tags: ['links'],
+        summary: 'Create a shortened URL for a given link',
+        tags: ['Links'],
         body: z.object({
           originalUrl: z.url({ error: 'Invalid URL format' }),
           shortenedUrl: z

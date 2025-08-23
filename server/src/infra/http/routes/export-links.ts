@@ -8,7 +8,7 @@ export const exportLinksRoute: FastifyPluginAsyncZod = async (server) => {
     {
       schema: {
         summary: 'Export all links into a CSV file',
-        tags: ['links'],
+        tags: ['Links'],
         response: {
           200: z.object({
             reportUrl: z.url().describe('The URL of the generated report'),

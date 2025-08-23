@@ -5,16 +5,13 @@ import { eq } from 'drizzle-orm'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
-export const getOriginalUrlByShortenedUrlRoute: FastifyPluginAsyncZod = async (
-  server
-) => {
+export const getOriginalUrl: FastifyPluginAsyncZod = async (server) => {
   server.get(
     '/:shortenedUrl',
     {
       schema: {
-        summary:
-          'Get the original URL by shortened URL and increments the counter of accesses',
-        tags: ['links'],
+        summary: 'Get the original URL by shortened URL',
+        tags: ['Links'],
         params: z.object({
           shortenedUrl: z
             .string({ error: 'Shortened URL must be a string' })

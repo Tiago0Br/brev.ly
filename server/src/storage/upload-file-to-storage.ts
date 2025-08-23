@@ -34,17 +34,7 @@ export async function uploadFileToStorage(input: UploadFileToStorageInput) {
     },
   })
 
-  console.log(env.CLOUDFLARE_BUCKET)
-  console.log(env.CLOUDFLARE_PUBLIC_URL)
-
-  upload
-    .done()
-    .then(() => {
-      console.log(`File uploaded successfully: ${uniqueFileName}`)
-    })
-    .catch((error) => {
-      console.error(`Deu ruim: ${error}`)
-    })
+  await upload.done()
 
   return {
     key: uniqueFileName,

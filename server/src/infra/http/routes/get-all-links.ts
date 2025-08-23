@@ -9,7 +9,7 @@ export const getAllLinksRoute: FastifyPluginAsyncZod = async (server) => {
     {
       schema: {
         summary: 'Get all links',
-        tags: ['links'],
+        tags: ['Links'],
         response: {
           200: z.array(
             z.object({

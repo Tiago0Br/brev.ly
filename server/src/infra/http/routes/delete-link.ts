@@ -4,13 +4,13 @@ import { eq } from 'drizzle-orm'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 
-export const deleteShortenedLinkRoute: FastifyPluginAsyncZod = async (server) => {
+export const deleteLinkRoute: FastifyPluginAsyncZod = async (server) => {
   server.delete(
-    '/links/delete/:linkId',
+    '/links/:linkId',
     {
       schema: {
-        summary: 'Delete a shortened link',
-        tags: ['links'],
+        summary: 'Delete a link',
+        tags: ['Links'],
         params: z.object({
           linkId: z.uuidv7({ error: 'Invalid UUID' }),
         }),
