@@ -3,12 +3,6 @@
   "organizeImports": {
     "enabled": false
   },
-  "formatter": {
-    "enabled": true,
-    "lineEnding": "lf",
-    "indentStyle": "space",
-    "indentWidth": 2
-  },
   "javascript": {
     "formatter": {
       "enabled": true,
@@ -21,6 +15,14 @@
   "json": {
     "formatter": {
       "enabled": true
+    }
+  },
+  "css": {
+    "formatter": {
+      "enabled": true,
+      "lineEnding": "lf",
+      "indentStyle": "space",
+      "indentWidth": 2
     }
   }
 }
