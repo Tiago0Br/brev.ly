@@ -11,13 +11,17 @@ export const getAllLinksRoute: FastifyPluginAsyncZod = async (server) => {
         summary: 'Get all links',
         tags: ['Links'],
         response: {
-          200: z.array(
-            z.object({
-              id: z.uuidv7().describe('Unique identifier for the link'),
-              originalUrl: z.url().describe('Original URL before shortening'),
-              shortenedUrl: z.string().describe('Shortened URL'),
-            })
-          ),
+          200: z.object({
+            data: z
+              .array(
+                z.object({
+                  id: z.uuidv7().describe('Unique identifier for the link'),
+                  originalUrl: z.url().describe('Original URL before shortening'),
+                  shortenedUrl: z.string().describe('Shortened URL'),
+                })
+              )
+              .describe('Array of links'),
+          }),
         },
       },
     },
@@ -29,7 +33,9 @@ export const getAllLinksRoute: FastifyPluginAsyncZod = async (server) => {
           shortenedUrl: schema.links.shortenedUrl,
         })
         .from(schema.links)
-      return reply.status(200).send(links)
+      return reply.status(200).send({
+        data: links,
+      })
     }
   )
 }
