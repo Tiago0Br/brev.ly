@@ -18,6 +18,11 @@ export const getAllLinksRoute: FastifyPluginAsyncZod = async (server) => {
                   id: z.uuidv7().describe('Unique identifier for the link'),
                   originalUrl: z.url().describe('Original URL before shortening'),
                   shortenedUrl: z.string().describe('Shortened URL'),
+                  accessCount: z
+                    .number()
+                    .int()
+                    .nonnegative()
+                    .describe('Number of times the shortened URL has been accessed'),
                 })
               )
               .describe('Array of links'),
@@ -31,6 +36,7 @@ export const getAllLinksRoute: FastifyPluginAsyncZod = async (server) => {
           id: schema.links.id,
           originalUrl: schema.links.originalUrl,
           shortenedUrl: schema.links.shortenedUrl,
+          accessCount: schema.links.accessCount,
         })
         .from(schema.links)
       return reply.status(200).send({
