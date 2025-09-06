@@ -5,6 +5,7 @@ interface GetLinksResponse {
     id: string
     originalUrl: string
     shortenedUrl: string
+    accessCount: number
   }[]
 }
 

@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod'
+import { CopyIcon, DownloadSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
@@ -117,7 +118,16 @@ export function App() {
         </form>
 
         <div className="w-[580px] min-h-[234px] bg-gray-100 rounded-lg p-8 flex flex-col gap-6">
-          <h2 className="text-xl text-gray-600 font-bold">Meus links</h2>
+          <div className="flex items-center justify-between">
+            <h2 className="text-xl text-gray-600 font-bold">Meus links</h2>
+            <button
+              type="button"
+              className="text-gray-600 bg-gray-200 p-2 rounded-md flex items-center gap-2 cursor-pointer"
+            >
+              <DownloadSimpleIcon size={20} />
+              Baixar CSV
+            </button>
+          </div>
 
           <div className="mt-5 py-4 border-t border-gray-400">
             {links?.length === 0 ? (
@@ -126,9 +136,35 @@ export function App() {
               </p>
             ) : (
               links?.map((link) => (
-                <div key={link.id} className="py-2 border-b border-gray-400">
-                  <p className="text-sm text-gray-600">{link.originalUrl}</p>
-                  <p className="text-sm text-gray-600">{link.shortenedUrl}</p>
+                <div
+                  key={link.id}
+                  className="flex justify-between items-center border-b border-gray-400"
+                >
+                  <div key={link.id} className="p-2">
+                    <p className="text-sm text-blue-base font-bold">
+                      {link.shortenedUrl}
+                    </p>
+                    <p className="text-sm text-gray-500">{link.originalUrl}</p>
+                  </div>
+
+                  <div className="flex items-center gap-5">
+                    <span className="text-sm">{link.accessCount} acessos</span>
+
+                    <div className="flex gap-1">
+                      <button
+                        type="button"
+                        className="size-8 rounded-md bg-gray-200 cursor-pointer flex justify-center items-center"
+                      >
+                        <CopyIcon size={20} />
+                      </button>
+                      <button
+                        type="button"
+                        className="size-8 rounded-md bg-gray-200 cursor-pointer flex justify-center items-center"
+                      >
+                        <TrashIcon size={20} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
               ))
             )}
