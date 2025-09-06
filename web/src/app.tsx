@@ -5,6 +5,8 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import logo from './assets/logo.svg'
 import { createLink } from './http/create-link'
+import { deleteLink } from './http/delete-link'
+import { exportLinks } from './http/export-links'
 import { getLinks } from './http/get-links'
 import { queryClient } from './lib/query-client'
 import { validateUrlPath } from './utils/validate-url-path'
@@ -44,6 +46,17 @@ export function App() {
     },
   })
 
+  const { mutateAsync: deleteLinkFn } = useMutation({
+    mutationFn: deleteLink,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['links'] })
+    },
+  })
+
+  const { mutateAsync: exportLinksFn } = useMutation({
+    mutationFn: exportLinks,
+  })
+
   async function handleCreateLink({ originalUrl, shortenedUrl }: CreateLinkForm) {
     await createLinkFn({
       originalUrl,
@@ -51,6 +64,19 @@ export function App() {
     })
 
     reset()
+  }
+
+  async function handleDeleteLink(id: string) {
+    await deleteLinkFn(id)
+  }
+
+  async function handleCopyLink(text: string) {
+    await navigator.clipboard.writeText(text)
+  }
+
+  async function handleExportLinks() {
+    const { reportUrl } = await exportLinksFn()
+    window.open(reportUrl, '_blank')
   }
 
   return (
@@ -123,6 +149,7 @@ export function App() {
             <button
               type="button"
               className="text-gray-600 bg-gray-200 p-2 rounded-md flex items-center gap-2 cursor-pointer"
+              onClick={handleExportLinks}
             >
               <DownloadSimpleIcon size={20} />
               Baixar CSV
@@ -142,7 +169,7 @@ export function App() {
                 >
                   <div key={link.id} className="p-2">
                     <p className="text-sm text-blue-base font-bold">
-                      {link.shortenedUrl}
+                      {window.location.host}/{link.shortenedUrl}
                     </p>
                     <p className="text-sm text-gray-500">{link.originalUrl}</p>
                   </div>
@@ -154,12 +181,16 @@ export function App() {
                       <button
                         type="button"
                         className="size-8 rounded-md bg-gray-200 cursor-pointer flex justify-center items-center"
+                        onClick={() =>
+                          handleCopyLink(`${window.location.host}/${link.shortenedUrl}`)
+                        }
                       >
                         <CopyIcon size={20} />
                       </button>
                       <button
                         type="button"
                         className="size-8 rounded-md bg-gray-200 cursor-pointer flex justify-center items-center"
+                        onClick={() => handleDeleteLink(link.id)}
                       >
                         <TrashIcon size={20} />
                       </button>
