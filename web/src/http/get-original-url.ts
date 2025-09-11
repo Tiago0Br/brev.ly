@@ -9,7 +9,7 @@ interface GetOriginalUrlResponse {
 }
 
 export async function getOriginalUrl({ shortenedUrl }: GetOriginalUrlRequest) {
-  const response = await api.get<GetOriginalUrlResponse>(`/${shortenedUrl}`)
+  const response = await api.get<GetOriginalUrlResponse>(`/links/${shortenedUrl}`)
   return {
     originalUrl: response.data.originalUrl,
   }

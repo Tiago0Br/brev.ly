@@ -7,7 +7,7 @@ import { z } from 'zod'
 
 export const getOriginalUrl: FastifyPluginAsyncZod = async (server) => {
   server.get(
-    '/:shortenedUrl',
+    '/links/:shortenedUrl',
     {
       schema: {
         summary: 'Get the original URL by shortened URL',
