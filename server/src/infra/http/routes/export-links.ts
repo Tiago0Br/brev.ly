@@ -1,4 +1,5 @@
 import { exportLinks } from '@/app/services/export-links'
+import { unwrapEither } from '@/shared/either'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 
@@ -17,7 +18,9 @@ export const exportLinksRoute: FastifyPluginAsyncZod = async (server) => {
       },
     },
     async (_request, reply) => {
-      const { reportUrl } = await exportLinks()
+      const result = await exportLinks()
+      const { reportUrl } = unwrapEither(result)
+
       reply.status(200).send({ reportUrl })
     }
   )

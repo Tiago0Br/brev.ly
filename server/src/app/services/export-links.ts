@@ -1,5 +1,6 @@
 import { db, pg } from '@/infra/database'
 import { schema } from '@/infra/database/schemas'
+import { makeRight } from '@/shared/either'
 import { uploadFileToStorage } from '@/storage/upload-file-to-storage'
 import { stringify } from 'csv-stringify'
 import { PassThrough, Transform } from 'node:stream'
@@ -67,7 +68,5 @@ export async function exportLinks() {
 
   const [, { url }] = await Promise.all([convertToCsvPipeline, uploadToStorage])
 
-  return {
-    reportUrl: url,
-  }
+  return makeRight({ reportUrl: url })
 }

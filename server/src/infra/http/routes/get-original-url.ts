@@ -1,11 +1,10 @@
-import { db } from '@/infra/database'
-import { schema } from '@/infra/database/schemas'
+import { getOriginalUrl } from '@/app/services/get-original-url'
+import { isRight, unwrapEither } from '@/shared/either'
 import { validateUrlPath } from '@/utils/validate-url-path'
-import { eq } from 'drizzle-orm'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
 
-export const getOriginalUrl: FastifyPluginAsyncZod = async (server) => {
+export const getOriginalUrlRoute: FastifyPluginAsyncZod = async (server) => {
   server.get(
     '/links/:shortenedUrl',
     {
@@ -36,25 +35,16 @@ export const getOriginalUrl: FastifyPluginAsyncZod = async (server) => {
     async (request, reply) => {
       const { shortenedUrl } = request.params
 
-      const [link] = await db
-        .select({
-          originalUrl: schema.links.originalUrl,
-          accessCount: schema.links.accessCount,
-        })
-        .from(schema.links)
-        .where(eq(schema.links.shortenedUrl, shortenedUrl))
-        .limit(1)
+      const result = await getOriginalUrl({ shortenedUrl })
 
-      if (!link) {
-        return reply.status(404).send({ message: 'URL not found' })
+      if (isRight(result)) {
+        const { originalUrl } = unwrapEither(result)
+        return reply.status(200).send({ originalUrl })
       }
 
-      await db
-        .update(schema.links)
-        .set({ accessCount: (link.accessCount ?? 0) + 1 })
-        .where(eq(schema.links.shortenedUrl, shortenedUrl))
+      const error = unwrapEither(result)
 
-      return reply.status(200).send({ originalUrl: link.originalUrl })
+      return reply.status(404).send({ message: error.message })
     }
   )
 }

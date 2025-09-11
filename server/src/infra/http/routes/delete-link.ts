@@ -1,6 +1,5 @@
-import { db } from '@/infra/database'
-import { schema } from '@/infra/database/schemas'
-import { eq } from 'drizzle-orm'
+import { deleteLink } from '@/app/services/delete-link'
+import { isRight, unwrapEither } from '@/shared/either'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import z from 'zod'
 
@@ -25,15 +24,15 @@ export const deleteLinkRoute: FastifyPluginAsyncZod = async (server) => {
     async (request, reply) => {
       const { linkId } = request.params
 
-      const link = await db.select().from(schema.links).where(eq(schema.links.id, linkId))
+      const result = await deleteLink({ linkId })
 
-      if (link.length === 0) {
-        return reply.status(404).send({ message: 'Link not found' })
+      if (isRight(result)) {
+        return reply.status(204).send()
       }
 
-      await db.delete(schema.links).where(eq(schema.links.id, linkId))
+      const error = unwrapEither(result)
 
-      return reply.status(204).send()
+      return reply.status(404).send({ message: error.message })
     }
   )
 }

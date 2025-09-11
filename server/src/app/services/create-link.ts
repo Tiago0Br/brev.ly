@@ -1,6 +1,8 @@
 import { db } from '@/infra/database'
 import { schema } from '@/infra/database/schemas'
+import { makeLeft, makeRight } from '@/shared/either'
 import { eq } from 'drizzle-orm'
+import { LinkAlreadyExists } from '../errors/link-already-exists'
 
 interface CreateLinkProps {
   originalUrl: string
@@ -14,11 +16,13 @@ export async function createLink({ originalUrl, shortenedUrl }: CreateLinkProps)
     .where(eq(schema.links.shortenedUrl, shortenedUrl))
 
   if (shortenedUrlAlreadyExists.length !== 0) {
-    throw new Error('This shortened URL already exists')
+    return makeLeft(LinkAlreadyExists.throw())
   }
 
   await db.insert(schema.links).values({
     originalUrl,
     shortenedUrl,
   })
+
+  return makeRight(null)
 }

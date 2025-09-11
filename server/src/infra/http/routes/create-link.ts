@@ -1,4 +1,5 @@
 import { createLink } from '@/app/services/create-link'
+import { isRight, unwrapEither } from '@/shared/either'
 import { validateUrlPath } from '@/utils/validate-url-path'
 import type { FastifyPluginAsyncZod } from 'fastify-type-provider-zod'
 import { z } from 'zod'
@@ -25,15 +26,26 @@ export const createLinkRoute: FastifyPluginAsyncZod = async (server) => {
           400: z.object({
             message: z.string().describe('Validation error'),
           }),
+          409: z.object({
+            message: z
+              .string()
+              .describe('Conflict error when shortened URL already exists'),
+          }),
         },
       },
     },
     async (request, reply) => {
       const { originalUrl, shortenedUrl } = request.body
 
-      await createLink({ originalUrl, shortenedUrl })
+      const result = await createLink({ originalUrl, shortenedUrl })
 
-      return reply.status(201).send({ message: 'Link created successfully' })
+      if (isRight(result)) {
+        return reply.status(201).send({ message: 'Link created successfully' })
+      }
+
+      const error = unwrapEither(result)
+
+      return reply.status(409).send({ message: error.message })
     }
   )
 }
