@@ -26,6 +26,7 @@ services:
       - POSTGRESQL_PASSWORD=${DB_PASSWORD}
       - POSTGRESQL_DATABASE=${DB_NAME}
     volumes:
+      - './.docker:/docker-entrypoint-initdb.d'
       - brev_ly_data:/bitnami/postgresql
 
 volumes:
