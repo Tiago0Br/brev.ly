@@ -1,4 +1,5 @@
 import logo from '@/assets/logo.svg'
+import { ErrorMessage } from '@/components/shared/error-message'
 import { createLink } from '@/http/create-link'
 import { deleteLink } from '@/http/delete-link'
 import { exportLinks } from '@/http/export-links'
@@ -8,13 +9,15 @@ import { validateUrlPath } from '@/utils/validate-url-path'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CopyIcon, DownloadSimpleIcon, TrashIcon } from '@phosphor-icons/react'
 import { useMutation, useQuery } from '@tanstack/react-query'
+import { isAxiosError } from 'axios'
 import { useForm } from 'react-hook-form'
+import { toast } from 'sonner'
 import { z } from 'zod'
 
 const createLinkForm = z.object({
-  originalUrl: z.url({ error: 'URL inválida' }),
+  originalUrl: z.url({ error: 'Informe uma url válida' }),
   shortenedUrl: z.string().refine(validateUrlPath, {
-    error: 'URL inválida',
+    error: 'Informe uma url minúscula, sem espaços ou caracteres especiais',
   }),
 })
 
@@ -44,6 +47,14 @@ export function HomePage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['links'] })
     },
+    onError: (error) => {
+      if (isAxiosError(error)) {
+        if (error.response?.data.message === 'This shortened URL already exists') {
+          return toast.error('O link encurtado já existe.')
+        }
+        toast.error('Ocorreu um erro ao criar o link. Tente novamente.')
+      }
+    },
   })
 
   const { mutateAsync: deleteLinkFn } = useMutation({
@@ -63,20 +74,25 @@ export function HomePage() {
       shortenedUrl,
     })
 
+    toast.success('Link criado com sucesso!')
+
     reset()
   }
 
   async function handleDeleteLink(id: string) {
     await deleteLinkFn(id)
+    toast.success('Link deletado com sucesso!')
   }
 
   async function handleCopyLink(text: string) {
     await navigator.clipboard.writeText(text)
+    toast.success('Link copiado para a área de transferência!')
   }
 
   async function handleExportLinks() {
     const { reportUrl } = await exportLinksFn()
     window.open(reportUrl, '_blank')
+    toast.success('Relatório gerado com sucesso!')
   }
 
   return (
@@ -110,8 +126,8 @@ export function HomePage() {
                 disabled={isSubmitting}
               />
 
-              {errors.originalUrl && (
-                <p className="text-red-500 text-xs">{errors.originalUrl.message}</p>
+              {errors.originalUrl?.message && (
+                <ErrorMessage message={errors.originalUrl.message} />
               )}
             </div>
 
@@ -128,8 +144,8 @@ export function HomePage() {
                 disabled={isSubmitting}
               />
 
-              {errors.shortenedUrl && (
-                <p className="text-red-500 text-xs">{errors.shortenedUrl.message}</p>
+              {errors.shortenedUrl?.message && (
+                <ErrorMessage message={errors.shortenedUrl.message} />
               )}
             </div>
           </div>
