@@ -141,7 +141,7 @@ export function HomePage() {
           </button>
         </form>
 
-        <div className="w-[580px] min-h-[234px] bg-gray-100 rounded-lg p-8 flex flex-col gap-6">
+        <div className="w-[580px] min-h-[234px] max-h-[600px] overflow-y-scroll bg-gray-100 rounded-lg p-8 flex flex-col gap-6">
           <div className="flex items-center justify-between">
             <h2 className="text-xl text-gray-600 font-bold">Meus links</h2>
             <button
