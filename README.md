@@ -4,7 +4,7 @@ Um encurtador de links moderno e eficiente desenvolvido como avaliação de cód
 
 ## 📋 Sobre o Projeto
 
-O **Brev.ly** é uma aplicação web completa para encurtamento de URLs que permite aos usuários:
+O **Brev.ly** é uma aplicação web para encurtamento de URLs que permite aos usuários:
 
 - ✨ **Criar** links encurtados personalizados
 - 📝 **Listar** todos os links criados
@@ -96,10 +96,10 @@ web/
 - `GET /links` - Listar todos os links
 - `GET /links/export` - Exportar links em CSV
 - `DELETE /links/:id` - Excluir link específico
-- `GET /:shortCode` - Redirecionar para URL original
+- `GET /links/:shortCode` - Buscar a URL original a partir da encurtada
 
 ### Documentação
-- `GET /docs` - Documentação Swagger da API (em desenvolvimento)
+- `GET /docs` - Documentação da API
 
 ## 🧪 Scripts Disponíveis
 
@@ -147,24 +147,6 @@ pnpm format       # Formatar código com Biome
 4. **Acesse a aplicação:**
    - Frontend: `http://localhost:5173`
    - Backend: `http://localhost:3333`
-
-## 🎯 Funcionalidades
-
-### ✅ Implementadas
-- [x] Estrutura base do projeto
-- [x] Configuração do banco de dados
-- [x] API para criação de links
-- [x] API para listagem de links
-- [x] API para exclusão de links
-- [x] Export de relatórios CSV
-- [x] Redirecionamento de URLs
-
-### 🚧 Em Desenvolvimento
-- [ ] Interface do usuário (React)
-- [ ] Validações avançadas
-- [ ] Testes automatizados
-- [ ] Estatísticas de cliques
-- [ ] Autenticação de usuários
 
 ---
 
