@@ -1,5 +1,5 @@
 import logo from '@/assets/logo.svg'
-import { ErrorMessage } from '@/components/shared/error-message'
+import { Input } from '@/components/ui/input'
 import { createLink } from '@/http/create-link'
 import { deleteLink } from '@/http/delete-link'
 import { exportLinks } from '@/http/export-links'
@@ -17,7 +17,7 @@ import { z } from 'zod'
 const createLinkForm = z.object({
   originalUrl: z.url({ error: 'Informe uma url válida' }),
   shortenedUrl: z.string().refine(validateUrlPath, {
-    error: 'Informe uma url minúscula, sem espaços ou caracteres especiais',
+    error: 'Informe uma url, sem espaços ou caracteres especiais',
   }),
 })
 
@@ -113,41 +113,23 @@ export function HomePage() {
           <h2 className="text-xl text-gray-600 font-bold">Novo link</h2>
 
           <div className="flex flex-col gap-4">
-            <div className="flex flex-col gap-2">
-              <label htmlFor="originalLink" className="text-xs uppercase text-gray-500">
-                Link original
-              </label>
-              <input
-                type="text"
-                id="originalLink"
-                placeholder="www.exemplo.com.br"
-                className="border border-gray-300 rounded-md p-2 placeholder:text-sm"
-                {...register('originalUrl')}
-                disabled={isSubmitting}
-              />
+            <Input
+              type="text"
+              id="originalLink"
+              placeholder="www.exemplo.com.br"
+              {...register('originalUrl')}
+              disabled={isSubmitting}
+              errorMessage={errors.originalUrl?.message}
+            />
 
-              {errors.originalUrl?.message && (
-                <ErrorMessage message={errors.originalUrl.message} />
-              )}
-            </div>
-
-            <div className="flex flex-col gap-2">
-              <label htmlFor="shortLink" className="text-xs uppercase text-gray-500">
-                Link encurtado
-              </label>
-              <input
-                type="text"
-                id="shortLink"
-                placeholder="brev.ly/"
-                className="border border-gray-300 rounded-md p-2 placeholder:text-sm"
-                {...register('shortenedUrl')}
-                disabled={isSubmitting}
-              />
-
-              {errors.shortenedUrl?.message && (
-                <ErrorMessage message={errors.shortenedUrl.message} />
-              )}
-            </div>
+            <Input
+              type="text"
+              id="shortLink"
+              placeholder="brev.ly/"
+              {...register('shortenedUrl')}
+              disabled={isSubmitting}
+              errorMessage={errors.shortenedUrl?.message}
+            />
           </div>
 
           <button
